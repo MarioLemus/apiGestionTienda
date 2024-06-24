@@ -1,6 +1,19 @@
 import mongoose from 'mongoose'
 
 const ProductSchema = new mongoose.Schema({
+  id_admin_creator: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    minLength: 3,
+    trim: true
+  },
+  id_admin_responsible_of_update: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    minLength: 3,
+    trim: true,
+    default: null
+  },
   name: {
     type: String,
     required: true,
@@ -28,6 +41,14 @@ const ProductSchema = new mongoose.Schema({
   },
   image: {
     type: String,
+    required: true
+  },
+  update_date: {
+    type: Date,
+    required: true
+  },
+  creation_date: {
+    type: Date,
     required: true
   }
 })

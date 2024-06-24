@@ -4,6 +4,7 @@ import cors from 'cors'
 import process from 'process'
 import { config } from 'dotenv'
 import { connectDB } from './utils/connectDB.js'
+import userRoutes from './routes/user.routes.js'
 
 config()
 connectDB()
@@ -19,6 +20,6 @@ app.use(cors({
   ]
 }))
 
-// app.use('/api/v1/')
+app.use('/api/v1/', userRoutes)
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))

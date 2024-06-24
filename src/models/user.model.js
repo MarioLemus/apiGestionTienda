@@ -11,11 +11,13 @@ const UserSchema = new mongoose.Schema({
     type: String,
     unique: true,
     required: true,
+    lowercase: true,
     trim: true
   },
   password: {
     type: String,
     required: true,
+    lowercase: true,
     trim: true
   },
   profilePic: {
@@ -25,6 +27,7 @@ const UserSchema = new mongoose.Schema({
     type: String,
     enum: ['user', 'employee', 'admin', 'superadmin'],
     trim: true,
+    lowercase: true,
     default: 'user'
   }
 })

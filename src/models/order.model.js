@@ -14,7 +14,7 @@ const OrderSchema = new mongoose.Schema({
     minLength: 3,
     trim: true
   },
-  order_id: {
+  id_receipt_order: {
     type: String,
     required: true,
     minLength: 3,

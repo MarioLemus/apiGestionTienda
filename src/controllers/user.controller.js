@@ -1,4 +1,3 @@
-import express from 'express'
 import User from '../models/user.model.js'
 
 export class UserController {
@@ -50,7 +49,7 @@ export class UserController {
       await user.save()
       res.status(200).json(user)
     } catch (err) {
-      res.status(500).json({ error: error.message })
+      res.status(500).json({ error: err.message })
     }
   }
 
@@ -62,7 +61,7 @@ export class UserController {
       }
       res.status(200).json({ message: 'Deleted user' })
     } catch (err) {
-      res.status(500).json({ error: error.message })
+      res.status(500).json({ error: err.message })
     }
   }
 }

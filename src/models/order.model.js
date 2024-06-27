@@ -1,5 +1,4 @@
 import mongoose from 'mongoose'
-import Product from './product.model'
 
 // ! envios disponibles solo dentro del mismo municipio/distrito
 const OrderSchema = new mongoose.Schema({

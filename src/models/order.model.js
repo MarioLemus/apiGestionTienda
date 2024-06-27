@@ -1,6 +1,7 @@
 import mongoose from 'mongoose'
 import Product from './product.model'
 
+// ! envios disponibles solo dentro del mismo municipio/distrito
 const OrderSchema = new mongoose.Schema({
   id_customer: {
     type: mongoose.Schema.Types.ObjectId,
@@ -19,6 +20,43 @@ const OrderSchema = new mongoose.Schema({
     required: true,
     minLength: 3,
     trim: true
+  },
+  is_gift: {
+    type: Boolean,
+    required: true,
+    default: false
+  },
+  receiver_name: {
+    type: String,
+    required: true,
+    minLength: 3,
+    trim: true
+  },
+  receiver_phone_number: {
+    type: Number,
+    required: true
+  },
+  payment_method: {
+    enum: ['efectivo', 'tarjeta'],
+    required: true,
+    minLength: 3,
+    trim: true,
+    default: 'tarjeta'
+  },
+  need_change_from_payment: {
+    type: Boolean,
+    required: true,
+    default: false
+  },
+  change_amount: {
+    type: Number,
+    required: true,
+    default: 0
+  },
+  total: {
+    type: Number,
+    required: true,
+    default: 0
   },
   order_status: {
     type: Boolean,

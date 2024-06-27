@@ -1,22 +1,22 @@
 import mongoose from 'mongoose'
-import Product from './product.model'
+import Product from './product.model.js'
 
 const OrderSchema = new mongoose.Schema({
   id_customer: {
     type: mongoose.Schema.Types.ObjectId,
-    required: true,
+    required: false,
     minLength: 3,
     trim: true
   },
   customer_name: {
     type: String,
-    required: true,
+    required: false,
     minLength: 3,
     trim: true
   },
-  id_receipt_order: {
+  id_order: {
     type: String,
-    required: true,
+    required: false,
     minLength: 3,
     trim: true
   },
@@ -25,10 +25,11 @@ const OrderSchema = new mongoose.Schema({
     required: true,
     default: true
   },
-  products: {
-    type: [Product],
+  products: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Product',
     required: true
-  },
+  }],
   creation_date: {
     type: Date,
     required: true

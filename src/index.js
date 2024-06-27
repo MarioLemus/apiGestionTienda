@@ -5,6 +5,7 @@ import { config as envConfig } from 'dotenv'
 import config from 'config'
 import { connectDB } from './utils/connectDB.js'
 import userRoutes from './routes/user.routes.js'
+import orderRoutes from './routes/order.routes.js'
 
 envConfig()
 connectDB()
@@ -21,5 +22,6 @@ app.use(cors({
 }))
 
 app.use('/api/v1/', userRoutes)
+app.use('/api/v1/', orderRoutes)
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))

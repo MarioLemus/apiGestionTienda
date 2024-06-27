@@ -1,5 +1,4 @@
 import mongoose from 'mongoose'
-import Product from './product.model'
 
 // ! envios disponibles solo dentro del mismo municipio/distrito
 const OrderSchema = new mongoose.Schema({
@@ -63,10 +62,34 @@ const OrderSchema = new mongoose.Schema({
     required: true,
     default: true
   },
-  products: {
-    type: [Product],
-    required: true
-  },
+  products: [
+    {
+      product: {
+        id_original_product: {
+          type: mongoose.Schema.Types.ObjectId,
+          required: true,
+          minLength: 3,
+          trim: true
+        },
+        name: {
+          type: String,
+          required: true,
+          minLength: 3,
+          trim: true
+        },
+        price: {
+          type: Number,
+          required: true,
+          min: 0
+        },
+        quantity: {
+          type: Number,
+          required: true,
+          min: 1
+        }
+      }
+    }
+  ],
   creation_date: {
     type: Date,
     required: true

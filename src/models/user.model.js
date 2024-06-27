@@ -1,6 +1,13 @@
 import mongoose from 'mongoose'
 
 const UserSchema = new mongoose.Schema({
+  username: {
+    type: String,
+    required: true,
+    unique: true,
+    minLength: 3,
+    trim: true
+  },
   name: {
     type: String,
     required: true,
@@ -14,6 +21,10 @@ const UserSchema = new mongoose.Schema({
     lowercase: true,
     trim: true
   },
+  phone_number: {
+    type: Number,
+    required: true
+  },
   password: {
     type: String,
     required: true,
@@ -23,6 +34,28 @@ const UserSchema = new mongoose.Schema({
   profilePic: {
     type: String
   },
+  adresses: [
+    {
+      alias: {
+        type: String,
+        required: true,
+        minLength: 3,
+        trim: true
+      },
+      address: {
+        type: String,
+        required: true,
+        minLength: 3,
+        trim: true
+      },
+      reference_point: {
+        type: String,
+        required: true,
+        minLength: 3,
+        trim: true
+      }
+    }
+  ],
   role: {
     type: String,
     enum: ['user', 'employee', 'admin', 'superadmin'],

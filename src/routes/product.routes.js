@@ -7,25 +7,14 @@ import {
 const router = Router();
 const productController = new ProductController();
 
-router.post("/crear-producto", upload.single("image"), (req, res) =>
-  productController.crearProducto(req, res)
-);
+router.post("/create-product", productController.create);
 
-router.put("/editar-producto/:_id", upload.single("image"), (req, res) => {
-  const imageFileName = req.file ? `./uploads/${req.file.filename}` : null;
-  productController.editarProducto(req, res, imageFileName);
-});
+router.put("/edit-product/:_id", productController.edit);
 
-router.delete("/eliminar-producto/:_id", (req, res) => {
-  productController.eliminarProducto(req, res);
-});
+router.delete("/delete-product/:_id", productController.delete);
 
-router.get("/obtener-producto", (req, res) => {
-  productController.obtenerProducto(req, res);
-});
+router.get("/get-product", productController.get);
 
-router.get("/buscar-producto-nombre/:name", (req, res) => {
-  productController.buscarnombreProducto(req, res);
-});
+router.get("/getbyname/:name", productController.getbyname);
 
 export default router;

@@ -11,5 +11,13 @@ module.exports = {
   server: {
     port: 3000
   },
+  tk: {
+    secret: 'mitiendasecret',
+    exp: '15m'
+  },
+  refresh_tk: {
+    secret: 'mitiendaserefreshsecret',
+    exp: '7d'
+  },
   logger: 'dev'
 }

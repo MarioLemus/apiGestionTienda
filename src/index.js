@@ -6,8 +6,8 @@ import config from 'config'
 import { connectDB } from './utils/connectDB.js'
 import userRoutes from './routes/user.routes.js'
 import productRoutes from './routes/product.routes.js'
-import categoryRoutes from "./routes/category.routes.js"
-
+import categoryRoutes from './routes/category.routes.js'
+import authRoutes from './routes/auth.routes.js'
 
 envConfig()
 connectDB()
@@ -23,8 +23,9 @@ app.use(
   })
 )
 
-app.use("/api/v1/", userRoutes)
-app.use("/api/v1/", productRoutes)
-app.use("/api/v1/", categoryRoutes)
+app.use('/api/v1/', authRoutes)
+app.use('/api/v1/', userRoutes)
+app.use('/api/v1/', productRoutes)
+app.use('/api/v1/', categoryRoutes)
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))

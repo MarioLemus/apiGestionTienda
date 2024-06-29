@@ -1,23 +1,9 @@
-import fs from "fs";
-import path from "path";
-import Products from "../models/product.model.js";
-import multer from "multer";
+import fs from 'fs'
+import Products from '../models/product.model.js'
+import multer from 'multer'
+import { getMulterStorageConfig } from '../utils/getMulterStorageConfig.js'
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const uploadDir = "./uploads";
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir);
-    }
-    cb(null, uploadDir);
-  },
-  filename: (req, file, cb) => {
-    cb(
-      null,
-      `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`
-    );
-  },
-});
+const storage = getMulterStorageConfig()
 
 export const upload = multer({ storage });
 
@@ -43,7 +29,6 @@ export class ProductController {
       }
       try {
         const { name, description, price, categoryid, stock } = req.body;
-
         const existingProduct = await Products.findOne({ name });
         if (existingProduct) {
           throw new Error(`El producto ${name} ya existe`);
@@ -127,29 +112,41 @@ export class ProductController {
   }
 
   async delete(req, res) {
-    try {
-      const product = await Products.findByIdAndDelete(req.params._id);
-      if (!product) {
-        res.status(500).json({ error: "no existe el producto" });
-      }
-      const imagenPath = product.image;
-      console.log("imagen a eliminar " + imagenPath);
-      try {
-        if (fs.existsSync(imagenPath)) {
-          fs.unlinkSync(imagenPath);
-          console.log("Imagen anterior eliminada");
-          res.status(200).json("Registro eliminado");
-        } else {
-          console.log("La imagen no existe:", imagenPath);
+      if (existingProduct && existingProduct.image) {
+        const imagenPath = existingProduct.image
+
+        try {
+          if (fs.existsSync(imagenPath)) {
+            fs.unlinkSync(imagenPath)
+            console.log('Imagen anterior eliminada')
+          } else {
+            console.log('La imagen no existe:', imagenPath)
+          }
+        } catch (err) {
+          console.error('Error al eliminar la imagen anterior:', err)
+          return res
+            .status(500)
+            .json({ error: 'Error al eliminar la imagen anterior' })
         }
-      } catch (err) {
-        console.error("Error al eliminar la imagen anterior:", err);
-        return res
-          .status(500)
-          .json({ error: "Error al eliminar la imagen anterior" });
+      } else {
+        console.log('No hay imagen para eliminar')
       }
+
+      existingProduct.name = name || existingProduct.name
+      existingProduct.description = description || existingProduct.description
+      existingProduct.price = price || existingProduct.price
+      existingProduct.category = category || existingProduct.category
+      existingProduct.stock = stock || existingProduct.stock
+
+      console.log('new image ', imageFileName)
+      if (imageFileName) {
+        existingProduct.image = imageFileName
+      }
+
+      await existingProduct.save()
+      res.status(200).json(existingProduct)
     } catch (error) {
-      res.status(500).json({ error: "error al eliminar" });
+      res.status(500).json({ error: 'Error al editar el producto' })
     }
   }
 }

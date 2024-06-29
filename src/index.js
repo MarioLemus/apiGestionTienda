@@ -1,29 +1,30 @@
-import express from "express";
-import logger from "morgan";
-import cors from "cors";
-import { config as envConfig } from "dotenv";
-import config from "config";
-import { connectDB } from "./utils/connectDB.js";
-import userRoutes from "./routes/user.routes.js";
-import productRoutes from "./routes/product.routes.js";
-import categoryRoutes from "./routes/category.routes.js";
+import express from 'express'
+import logger from 'morgan'
+import cors from 'cors'
+import { config as envConfig } from 'dotenv'
+import config from 'config'
+import { connectDB } from './utils/connectDB.js'
+import userRoutes from './routes/user.routes.js'
+import productRoutes from './routes/product.routes.js'
+import categoryRoutes from "./routes/category.routes.js"
 
-envConfig();
-connectDB();
-const app = express();
-const port = config.get("server.port");
-const devClient = "http://localhost:5173";
 
-app.use(express.json());
-app.use(logger(config.get("logger")));
+envConfig()
+connectDB()
+const app = express()
+const port = config.get('server.port')
+const devClient = 'http://localhost:5173'
+
+app.use(express.json())
+app.use(logger(config.get('logger')))
 app.use(
   cors({
-    origin: [devClient],
+    origin: [devClient]
   })
-);
+)
 
-app.use("/api/v1/", userRoutes);
-app.use("/api/v1/", productRoutes);
-app.use("/api/v1/", categoryRoutes);
+app.use("/api/v1/", userRoutes)
+app.use("/api/v1/", productRoutes)
+app.use("/api/v1/", categoryRoutes)
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+app.listen(port, () => console.log(`Example app listening on port ${port}!`))

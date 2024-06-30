@@ -24,6 +24,6 @@ app.use(
 
 app.use('/api/v1/', userRoutes)
 app.use('/api/v1/', orderRoutes)
-app.use("/api/v1/", productRoutes);
+app.use('/api/v1/', productRoutes)
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))

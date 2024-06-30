@@ -19,5 +19,8 @@ module.exports = {
     secret: 'mitiendaserefreshsecret',
     exp: '7d'
   },
+  crypto: {
+    secret: 'mitienda_901234567890123_ejemplo'
+  },
   logger: 'dev'
 }

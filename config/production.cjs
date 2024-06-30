@@ -19,6 +19,9 @@ module.exports = {
     secret: process.env.REFRESH_TK_SEC,
     exp: '7d'
   },
+  crypto: {
+    secret: process.env.CRYPTO_SEC
+  },
   logger: process.env.LOGGER_OPTION
 }
   

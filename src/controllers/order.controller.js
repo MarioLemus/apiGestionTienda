@@ -46,7 +46,7 @@ export class OrderController {
                 price: productDetails.price,
                 quantity: prod.quantity
               }
-            }
+            }  
         }))   
 
         const newOrder = new Order({id_customer, 
@@ -62,9 +62,11 @@ export class OrderController {
           update_date, 
           update_time: now.toTimeString().split(' ')[0]
         });  
-          
+
+        
           await newOrder.save();  
           res.status(201).json(newOrder);
+          
         }catch(err){
           res.status(500).json({error: err.message});
         }
@@ -72,15 +74,30 @@ export class OrderController {
 
     static async updatedStatus (req, res) {
       const { _id } = req.params
-  
       try {
-        const order = await Order.findById(_id)
-        if (!order) {
-          throw new Error(`La orden con ID: ${_id} no existe`)
-        }
-        order.is_Cancelled = true
-        await order.save()
-        res.status(201).json(order);
+          const order = await Order.findById(_id)
+          if (!order) {
+            throw new Error(`La orden con ID: ${_id} no existe`)
+          }
+          order.is_Cancelled = true
+          
+          const orderArray = order.products.map((prod) => ({
+            id_product: prod.product.id_product, 
+            quantity: prod.product.quantity
+          }));
+      
+
+          const updates = orderArray.map((item) => {
+            return Product.findByIdAndUpdate(
+              item.id_product,
+              { $inc: { stock: item.quantity } }
+            );
+          });
+          
+          await Promise.all(updates);
+
+          await order.save()
+          res.status(201).json(order);
       } catch (err) {
         res.status(500).json({error: err.message});
       }

@@ -8,6 +8,7 @@ import userRoutes from './routes/user.routes.js'
 import productRoutes from './routes/product.routes.js'
 import categoryRoutes from './routes/category.routes.js'
 import authRoutes from './routes/auth.routes.js'
+import cookieParser from 'cookie-parser'
 
 envConfig()
 connectDB()
@@ -15,6 +16,7 @@ const app = express()
 const port = config.get('server.port')
 const devClient = 'http://localhost:5173'
 
+app.use(cookieParser())
 app.use(express.json())
 app.use(logger(config.get('logger')))
 app.use(

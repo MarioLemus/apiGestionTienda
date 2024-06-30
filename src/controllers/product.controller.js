@@ -3,9 +3,9 @@ import Products from '../models/product.model.js'
 import multer from 'multer'
 import { getMulterStorageConfig } from '../utils/getMulterStorageConfig.js'
 
-const storage = getMulterStorageConfig()
+const storage = await getMulterStorageConfig()
 
-export const upload = multer({ storage })
+const upload = multer({ storage })
 
 export class ProductController {
   async get (req, res) {

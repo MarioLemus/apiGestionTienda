@@ -4,8 +4,8 @@ import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 export class UserController {
   static async getAll (req, res) {
@@ -18,11 +18,13 @@ export class UserController {
   }
 
   static async create (req, res) {
+    // eslint-disable-next-line camelcase
     const { username, name, email, phone_number, password, adresses, role } = req.body
-    const profilePic = req.file ? req.file.filename : null;
+    const profilePic = req.file ? req.file.filename : null
 
     try {
-      const hashedPassword = await bcrypt.hash(password,10);
+      const hashedPassword = await bcrypt.hash(password, 10)
+      // eslint-disable-next-line camelcase
       const newUser = new User({ username, name, email, phone_number, password: hashedPassword, profilePic, adresses, role })
       await newUser.save()
       res.status(201).json(newUser)
@@ -44,8 +46,9 @@ export class UserController {
   }
 
   static async updateOne (req, res) {
-    const { username, name, email, phone_number, password, adresses, role } = req.body;
-    const profilePic = req.file ? req.file.filename : null;
+    // eslint-disable-next-line camelcase
+    const { username, name, email, phone_number, password, adresses, role } = req.body
+    const profilePic = req.file ? req.file.filename : null
 
     try {
       const user = await User.findById(req.params.id)
@@ -54,17 +57,18 @@ export class UserController {
       }
 
       if (password) {
-        user.password = await bcrypt.hash(password, 10);
+        user.password = await bcrypt.hash(password, 10)
       }
 
       user.username = username || user.username
       user.name = name || user.name
       user.email = email || user.email
+      // eslint-disable-next-line camelcase
       user.phone_number = phone_number || user.phone_number
       user.adresses = adresses || user.adresses
       user.role = role || user.role
 
-      if(profilePic){
+      if (profilePic) {
         user.profilePic = profilePic
       }
       await user.save()
@@ -81,20 +85,20 @@ export class UserController {
         return res.status(404).json({ error: 'Usuario no encontrado' })
       }
       if (user.profilePic) {
-        const profilePicPath = path.join(__dirname, '..', '..', 'uploads', user.profilePic);
+        const profilePicPath = path.join(__dirname, '..', '..', 'uploads', user.profilePic)
         fs.access(profilePicPath, fs.constants.F_OK, (err) => {
           if (err) {
-            console.error('Archivo no existe:', profilePicPath);
+            console.error('Archivo no existe:', profilePicPath)
           } else {
             fs.unlink(profilePicPath, (err) => {
               if (err) {
-                console.error('Error al eliminar imagen:', err);
-                return res.status(500).json({ error: 'Error al eliminar imagen' });
+                console.error('Error al eliminar imagen:', err)
+                return res.status(500).json({ error: 'Error al eliminar imagen' })
               }
-              console.log('Imagen eliminada:', user.profilePic);
-            });
+              console.log('Imagen eliminada:', user.profilePic)
+            })
           }
-        });
+        })
       }
       res.status(200).json({ message: 'Deleted user' })
     } catch (err) {

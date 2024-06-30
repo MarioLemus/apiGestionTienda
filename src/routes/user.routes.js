@@ -1,11 +1,11 @@
 import { Router } from 'express'
 import multer from 'multer'
 import { UserController } from '../controllers/user.controller.js'
-import { getMulterStorageConfig }from '../utils/getMulterStorageConfig.js'
+import { getMulterStorageConfig } from '../utils/getMulterStorageConfig.js'
 import { validateToken } from '../middlewares/validateToken.js'
 
-const storageConfig = await getMulterStorageConfig();
-const upload = multer({ storage: storageConfig });
+const storageConfig = await getMulterStorageConfig()
+const upload = multer({ storage: storageConfig })
 const router = Router()
 
 router.get('/user', validateToken, UserController.getAll)

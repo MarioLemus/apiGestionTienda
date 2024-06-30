@@ -2,7 +2,6 @@ import Category from '../models/category.model.js'
 
 export class CategoryController {
   async get (req, res) {
-    const { name, update_date, creation_date } = req.body
     try {
       const category = await Category.find()
       res.status(200).json(category)
@@ -25,7 +24,7 @@ export class CategoryController {
         creation_date: new Date()
       })
 
-      const savedata = category.save()
+      category.save()
       res.status(200).json(category)
     } catch (error) {
       return res.status(400).json({ error: 'Error al guardar la categoria' })

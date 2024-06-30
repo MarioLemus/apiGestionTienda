@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+import Product from './product.model.js'
 
 // ! envios disponibles solo dentro del mismo municipio/distrito
 const OrderSchema = new mongoose.Schema({
@@ -14,28 +15,14 @@ const OrderSchema = new mongoose.Schema({
     minLength: 3,
     trim: true
   },
-  id_receipt_order: {
+  id_order: {
     type: String,
     required: true,
     minLength: 3,
     trim: true
-  },
-  is_gift: {
-    type: Boolean,
-    required: true,
-    default: false
-  },
-  receiver_name: {
-    type: String,
-    required: true,
-    minLength: 3,
-    trim: true
-  },
-  receiver_phone_number: {
-    type: Number,
-    required: true
   },
   payment_method: {
+    type: String,
     enum: ['efectivo', 'tarjeta'],
     required: true,
     minLength: 3,
@@ -65,7 +52,7 @@ const OrderSchema = new mongoose.Schema({
   products: [
     {
       product: {
-        id_original_product: {
+        id_product: {
           type: mongoose.Schema.Types.ObjectId,
           required: true,
           minLength: 3,
@@ -105,6 +92,11 @@ const OrderSchema = new mongoose.Schema({
   update_time: {
     type: String,
     required: true
+  },
+  is_Cancelled: {
+    type: Boolean,
+    required: true,
+    default: false
   }
 })
 

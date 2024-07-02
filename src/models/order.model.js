@@ -1,5 +1,4 @@
 import mongoose from 'mongoose'
-import Product from './product.model.js'
 
 // ! envios disponibles solo dentro del mismo municipio/distrito
 const OrderSchema = new mongoose.Schema({
@@ -12,7 +11,17 @@ const OrderSchema = new mongoose.Schema({
   customer_name: {
     type: String,
     required: true,
+<<<<<<< ariel-ordenes
     minLength:  3,
+=======
+    minLength: 3,
+    trim: true
+  },
+  id_order: {
+    type: String,
+    required: true,
+    minLength: 3,
+>>>>>>> main
     trim: true
   },
   payment_method: {

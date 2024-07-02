@@ -11,6 +11,9 @@ const OrderSchema = new mongoose.Schema({
   customer_name: {
     type: String,
     required: true,
+<<<<<<< ariel-ordenes
+    minLength:  3,
+=======
     minLength: 3,
     trim: true
   },
@@ -18,6 +21,7 @@ const OrderSchema = new mongoose.Schema({
     type: String,
     required: true,
     minLength: 3,
+>>>>>>> main
     trim: true
   },
   payment_method: {
@@ -34,6 +38,11 @@ const OrderSchema = new mongoose.Schema({
     default: false
   },
   change_amount: {
+    type: Number,
+    required: true,
+    default: 0
+  },
+  amount_received: {
     type: Number,
     required: true,
     default: 0

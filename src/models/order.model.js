@@ -5,20 +5,14 @@ import Product from './product.model.js'
 const OrderSchema = new mongoose.Schema({
   id_customer: {
     type: mongoose.Schema.Types.ObjectId,
-    required: false,
+    required: true,
     minLength: 3,
     trim: true
   },
   customer_name: {
     type: String,
-    required: false,
-    minLength: 3,
-    trim: true
-  },
-  id_order: {
-    type: String,
-    required: false,
-    minLength: 3,
+    required: true,
+    minLength:  3,
     trim: true
   },
   payment_method: {
@@ -35,6 +29,11 @@ const OrderSchema = new mongoose.Schema({
     default: false
   },
   change_amount: {
+    type: Number,
+    required: true,
+    default: 0
+  },
+  amount_received: {
     type: Number,
     required: true,
     default: 0

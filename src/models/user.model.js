@@ -3,7 +3,7 @@ import mongoose from 'mongoose'
 const UserSchema = new mongoose.Schema({
   username: {
     type: String,
-    required: true,
+    required: false,
     unique: true,
     minLength: 3,
     trim: true
@@ -23,7 +23,7 @@ const UserSchema = new mongoose.Schema({
   },
   phone_number: {
     type: Number,
-    required: true
+    required: false
   },
   password: {
     type: String,

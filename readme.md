@@ -70,26 +70,6 @@ npm run lint:fix
 | test      | Agregar pruebas unitarias                     |
 | style     | Realizar cambios en los estilos del codigo    |
 
-### Formato de carpetas
-
-```bash
-|
-|--controllers
-|   |
-|   |--ejemploControlador
-|   |   |
-|   |   |--index.js
-|   |   |
-|   |   |--index.test.js
-|
-|--utils
-|   |
-|   |--ejemploUtils
-|   |   |
-|   |   |--index.js
-|   |   |
-|   |   |--index.test.js
-```
 
 ### Forma de trabajo
 

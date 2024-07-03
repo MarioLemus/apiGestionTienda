@@ -90,7 +90,7 @@ Instrucciones sobre cómo realizar una Pull Request de manera efectiva.
 
 ## Autores
 
-- **Mario Lemus** - *Contribución inicial* - [Perfil de GitHub](https://github.com/MarioLemus)
-- **René** - *Desarrollo de características* - [Perfil de GitHub]()
-- **Milton Flores** - *Corrección de errores* - [Perfil de GitHub]()
-- **Ariel Amaya** - *Documentación* - [Perfil de GitHub]()
+- **Mario Lemus** - [Perfil de GitHub](https://github.com/MarioLemus)
+- **René** - [Perfil de GitHub]()
+- **Milton Flores** - [Perfil de GitHub]()
+- **Ariel Amaya** - [Perfil de GitHub]()

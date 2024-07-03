@@ -9,9 +9,9 @@ import { verifyTokenValidity } from '../utils/verifyTokenValidity.js'
 
 export class AuthController {
   static async signup (req, res) {
-    const { username, name, email, password, phone_number, profilePic, addresses } = req.body
+    const { username, name, email, password, phone_number, profilePic, adresses } = req.body
     try {
-      await User.create({ username, name, email, password, phone_number, profilePic, addresses })
+      await User.create({ username, name, email, password, phone_number, profilePic, adresses })
       return res.status(201).json({ message: 'User created' })
     } catch (error) {
       return res.status(500).json({ message: 'Internal server error', error })

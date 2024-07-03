@@ -10,6 +10,10 @@ Es una web donde los usuarios pueden crear y gestionar los recursos de una tiend
 - [Contribución](#contribución)
 - [Autores](#autores)
 
+## Documentación
+[Documentación del Proyecto.pdf](https://github.com/user-attachments/files/16087684/Documentacion.del.Proyecto.pdf)
+
+
 ## Descripción
 
 Es una web donde los usuarios pueden crear y gestionar los recursos de su propia tienda desde inventarios, planillas y ventanilla virtual a través de la cual los clientes pueden interactuar con los productos de la tienda.

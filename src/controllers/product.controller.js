@@ -3,6 +3,8 @@ import Products from '../models/product.model.js'
 import multer from 'multer'
 import { getMulterStorageConfig } from '../utils/getMulterStorageConfig.js'
 import mongoose from 'mongoose'
+import { getRootDir } from '../utils/getRootDir.js'
+import path from 'path'
 
 const storage = await getMulterStorageConfig()
 
@@ -65,58 +67,39 @@ export class ProductController {
   }
 
   async edit (req, res) {
-    const imageFileName = req.file ? `./uploads/${req.file.filename}` : null
-    upload.single('image')(req, res, async (err) => {
-      if (err) {
-        return res.status(400).json({ error: 'Error al subir la imagen' })
-      }
+    const imageFileName = req.file ? `${req.file.filename}` : null
+    const { _id } = req.params
+    const { name, description, price, categoryid, stock } = req.body
+    const existingProduct = await Products.findOne({ _id })
+      .catch(e => res.status(500).json({ message: 'Query failed', error: e }))
+
+    if (!existingProduct) return res.status(404).json({ error: 'The product does not exists' })
+
+    if (imageFileName) {
       try {
-        const _id = req.params._id
-        const { name, description, price, categoryid, stock } = req.body
-
-        const existingProduct = await Products.findOne({ _id })
-
-        if (!existingProduct) {
-          throw new Error(`El producto ${name} no existe`)
-        }
-
-        if (existingProduct && existingProduct.image) {
-          const imagenPath = existingProduct.image
-
-          try {
-            if (fs.existsSync(imagenPath)) {
-              fs.unlinkSync(imagenPath)
-              console.log('Imagen anterior eliminada')
-            } else {
-              console.log('La imagen no existe:', imagenPath)
-            }
-          } catch (err) {
-            console.error('Error al eliminar la imagen anterior:', err)
-            return res
-              .status(500)
-              .json({ error: 'Error al eliminar la imagen anterior' })
-          }
-        } else {
-          console.log('No hay imagen para eliminar')
-        }
-
-        existingProduct.name = name || existingProduct.name
-        existingProduct.description = description || existingProduct.description
-        existingProduct.price = price || existingProduct.price
-        existingProduct.categoryid = categoryid || existingProduct.categoryid
-        existingProduct.stock = stock || existingProduct.stock
-
-        console.log('new image ', imageFileName)
-        if (imageFileName) {
-          existingProduct.image = imageFileName
-        }
-
+        // try if the image path exists in uploads folder
+        const localImagePath = path.join((await getRootDir()), 'uploads', existingProduct.image)
+        fs.unlinkSync(localImagePath)
+        existingProduct.image = imageFileName
         await existingProduct.save()
-        return res.status(200).json(existingProduct)
-      } catch (error) {
-        return res.status(500).json({ error: 'Error al editar el producto' })
+        return res.status(200).json({ product: existingProduct })
+      } catch (_) {
+        // if the image path does not exist in uploads folder update the image reference in db
+        // to match the local image repository
+        existingProduct.image = imageFileName
+        await existingProduct.save()
+        return res.status(200).json({ product: existingProduct })
       }
-    })
+    }
+
+    existingProduct.name = name || existingProduct.name
+    existingProduct.description = description || existingProduct.description
+    existingProduct.price = price || existingProduct.price
+    existingProduct.categoryid = categoryid || existingProduct.categoryid
+    existingProduct.stock = stock || existingProduct.stock
+
+    await existingProduct.save()
+    return res.status(200).json({ product: existingProduct })
   }
 
   async delete (req, res) {

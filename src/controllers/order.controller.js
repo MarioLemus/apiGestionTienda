@@ -4,7 +4,6 @@ import Product from '../models/product.model.js'
 import User from '../models/user.model.js'
 
 export class OrderController {
-
   static async create (req, res) {
     const now = new Date()
     const timeoutPromise = (ms, promise) => {
@@ -28,16 +27,14 @@ export class OrderController {
     } = req.body
 
     try {
-      let customer_name = ""
+      let customer_name = ''
       const userData = await User.findById(id_customer)
 
-      if(!userData){
+      if (!userData) {
         throw new Error(`Usuario con id ${id_customer} no encontrado`)
       }
 
       customer_name = userData.name
-
-
 
       let total = 0
       const products = await Promise.all(requestedProducts.map(async (prod) => {
@@ -59,18 +56,18 @@ export class OrderController {
             name: productDetails.name,
             price: productDetails.price,
             quantity: prod.quantity
-          },
+          }
         }
       }))
 
       let need_change_from_payment = false
       let change_amount = 0
 
-      if(payment_method === "efectivo") {
+      if (payment_method === 'efectivo') {
         if (amount_received < total) {
           return res.status(400).json({ error: 'El monto recibido es menor que el total.' })
-        }else if(amount_received > total){
-          if(!need_change_from_payment){
+        } else if (amount_received > total) {
+          if (!need_change_from_payment) {
             need_change_from_payment = true
             change_amount = amount_received - total
           }

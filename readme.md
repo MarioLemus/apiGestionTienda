@@ -78,7 +78,6 @@ Instrucciones trabajo en ramas
 - Crea una rama alterna a "main" con el siguiente formato "nombre_contribuyente:verbo_segun_tabla/objetivo_a_lograr"
   - Ejemplo: "milton:bugfix/arreglar-bug-servidor"
 - Se realizara pull request una vez se haya completado el objetivo de la rama
-- El nuevo codigo sobre el que se trabaje debe contener al menos 3 "tests" por funcion agregada (revisar lineamientos para hacer "pull request" abajo)
 - Eliminar rama una vez finalizado el trabajo en esta
 
 ### Proceso de Pull Request

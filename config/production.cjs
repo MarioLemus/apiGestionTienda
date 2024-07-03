@@ -11,6 +11,17 @@ module.exports = {
   server: {
     port: process.env.PORT
   },
+  tk: {
+    secret: process.env.TK_SEC,
+    exp: '15m'
+  },
+  refresh_tk: {
+    secret: process.env.REFRESH_TK_SEC,
+    exp: '7d'
+  },
+  crypto: {
+    secret: process.env.CRYPTO_SEC
+  },
   logger: process.env.LOGGER_OPTION
 }
   

@@ -9,5 +9,6 @@ router.put('/product/:_id', productController.edit)
 router.delete('/product/:_id', productController.delete)
 router.get('/product', productController.get)
 router.get('/product/:name', productController.getbyname)
+router.get('/product/category/:category_id', productController.getbycategory)
 
 export default router

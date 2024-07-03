@@ -1,14 +1,17 @@
-import jwt from 'jsonwebtoken'
 import config from 'config'
+import Token from '../models/token.model.js'
+import { decrypt } from '../utils/cryptoUtil.js'
+import { verifyTokenValidity } from '../utils/verifyTokenValidity.js'
 
-export const validateToken = (req, res, next) => {
+export const validateToken = async (req, res, next) => {
   const authHeader = req.headers.authorization
-  const token = authHeader && authHeader.split(' ')[1]
-  if (!token) return res.sendStatus(401)
+  const tokenID = authHeader && authHeader.split(' ')[1]
+  if (!tokenID) return res.sendStatus(401)
 
-  jwt.verify(token, config.get('tk.secret'), (err, user) => {
-    if (err) return res.status(403).json({ error: 'Invalid token' })
-    req.user = user
-    next()
-  })
+  const { accessToken } = await Token.findById(tokenID)
+    .catch(e => res.status(500).json({ message: 'Query failed', error: e }))
+
+  const isValidToken = await verifyTokenValidity(decrypt(accessToken), config.get('tk.secret'))
+  if (isValidToken === false) return res.sendStatus(401)
+  next()
 }

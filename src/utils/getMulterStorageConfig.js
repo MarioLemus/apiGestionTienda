@@ -6,7 +6,7 @@ import path from 'path'
 export const getMulterStorageConfig = async () => {
   try {
     const root = await getRootDir()
-    const uploadDir = path.join(root, 'uploads')
+    const uploadDir = path.join(root, 'uploads/')
     return multer.diskStorage({
       destination: (req, file, cb) => {
         if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir)

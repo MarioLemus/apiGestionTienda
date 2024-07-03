@@ -23,7 +23,7 @@ const UserSchema = new mongoose.Schema({
   },
   phone_number: {
     type: Number,
-    required: true
+    default: null
   },
   password: {
     type: String,
@@ -32,30 +32,36 @@ const UserSchema = new mongoose.Schema({
     trim: true
   },
   profilePic: {
-    type: String
+    type: String,
+    trim: true,
+    default: ''
   },
-  adresses: [
-    {
-      alias: {
-        type: String,
-        required: true,
-        minLength: 3,
-        trim: true
-      },
-      address: {
-        type: String,
-        required: true,
-        minLength: 3,
-        trim: true
-      },
-      reference_point: {
-        type: String,
-        required: true,
-        minLength: 3,
-        trim: true
+  adresses: {
+    type: [
+      {
+        alias: {
+          type: String,
+          minLength: 3,
+          required: true,
+          trim: true
+        },
+        address: {
+          type: String,
+          minLength: 3,
+          required: true,
+          trim: true
+        },
+        reference_point: {
+          type: String,
+          required: true,
+          minLength: 3,
+          trim: true
+        }
       }
-    }
-  ],
+    ],
+    default: [],
+    required: false
+  },
   role: {
     type: String,
     enum: ['user', 'employee', 'admin', 'superadmin'],

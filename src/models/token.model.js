@@ -1,14 +1,20 @@
 import mongoose from 'mongoose'
 
-const refreshTokenSchema = new mongoose.Schema({
-  token: {
+const tokenSchema = new mongoose.Schema({
+  id_user: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: 'User'
+  },
+  accessToken: {
     type: String,
     required: true,
     trim: true
   },
-  userID: {
+  refreshToken: {
     type: String,
-    required: true
+    required: true,
+    trim: true
   },
   role: {
     type: String,
@@ -25,4 +31,5 @@ const refreshTokenSchema = new mongoose.Schema({
   }
 })
 
-export default mongoose.model('RefreshToken', refreshTokenSchema)
+const Token = mongoose.model('Token', tokenSchema)
+export default Token

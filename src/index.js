@@ -22,7 +22,8 @@ app.use(express.json())
 app.use(logger(config.get('logger')))
 app.use(
   cors({
-    origin: [devClient]
+    origin: [devClient],
+    credentials: true
   })
 )
 

@@ -2,6 +2,7 @@ import fs from 'fs'
 import Products from '../models/product.model.js'
 import multer from 'multer'
 import { getMulterStorageConfig } from '../utils/getMulterStorageConfig.js'
+import mongoose from 'mongoose'
 
 const storage = await getMulterStorageConfig()
 
@@ -11,7 +12,7 @@ export class ProductController {
   async get (req, res) {
     const products = await Products.find()
     console.log(products)
-    res.status(200).json(products)
+    return res.status(200).json(products)
   }
 
   async getbyname (req, res) {
@@ -19,7 +20,16 @@ export class ProductController {
     console.log({ name })
     const product = await Products.findOne({ name })
     console.log(product)
-    res.status(200).json(product)
+    return res.status(200).json(product)
+  }
+
+  async getbycategory (req, res) {
+    // eslint-disable-next-line camelcase
+    const { category_id } = req.params
+    const objectId = new mongoose.Types.ObjectId(category_id)
+    const products = await Products.find({ categoryid: objectId })
+    console.log(products)
+    return res.status(200).json(products)
   }
 
   async create (req, res) {
@@ -28,7 +38,7 @@ export class ProductController {
         return res.status(400).json({ error: 'Error al subir la imagen' })
       }
       try {
-        const { name, description, price, categoryid, stock } = req.body
+        const { name, description, price, stock, image } = req.body
         const existingProduct = await Products.findOne({ name })
         if (existingProduct) {
           throw new Error(`El producto ${name} ya existe`)
@@ -38,9 +48,8 @@ export class ProductController {
           name,
           description,
           price,
-          categoryid,
           stock,
-          image: `./uploads/${req.file.filename}`,
+          image,
           update_date: new Date(),
           creation_date: new Date()
         })
@@ -48,9 +57,9 @@ export class ProductController {
         console.log('Los datos del model a guardar son' + newProduct)
         const saveProduct = await newProduct.save()
 
-        res.status(201).json(saveProduct)
+        return res.status(201).json(saveProduct)
       } catch (error) {
-        res.status(500).json({ error: 'Error al crear el producto' })
+        return res.status(500).json({ error: 'Error al crear el producto' })
       }
     })
   }
@@ -92,8 +101,7 @@ export class ProductController {
         }
 
         existingProduct.name = name || existingProduct.name
-        existingProduct.description =
-          description || existingProduct.description
+        existingProduct.description = description || existingProduct.description
         existingProduct.price = price || existingProduct.price
         existingProduct.categoryid = categoryid || existingProduct.categoryid
         existingProduct.stock = stock || existingProduct.stock
@@ -104,9 +112,9 @@ export class ProductController {
         }
 
         await existingProduct.save()
-        res.status(200).json(existingProduct)
+        return res.status(200).json(existingProduct)
       } catch (error) {
-        res.status(500).json({ error: 'Error al editar el producto' })
+        return res.status(500).json({ error: 'Error al editar el producto' })
       }
     })
   }
@@ -139,9 +147,9 @@ export class ProductController {
       }
 
       await Products.deleteOne({ _id })
-      res.status(200).json({ message: 'Producto eliminado' })
+      return res.status(200).json({ message: 'Producto eliminado' })
     } catch (error) {
-      res.status(500).json({ error: 'Error al eliminar el producto' })
+      return res.status(500).json({ error: 'Error al eliminar el producto' })
     }
   }
 }

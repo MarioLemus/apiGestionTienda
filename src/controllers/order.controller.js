@@ -37,8 +37,6 @@ export class OrderController {
 
       customer_name = userData.name
 
-
-
       let total = 0
       const products = await Promise.all(requestedProducts.map(async (prod) => {
         const productDetails = await timeoutPromise(5000, Product.findById(prod.id_product))

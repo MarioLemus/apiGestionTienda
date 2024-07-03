@@ -1,19 +1,16 @@
+/* eslint-disable camelcase */
 import config from 'config'
-import jwt from 'jsonwebtoken'
 import { generateAccessToken } from '../utils/generateAccessToken.js'
-import { httpOnly } from '../constants/config/httpOnly.js'
 import { decrypt, encrypt } from '../utils/cryptoUtil.js'
 import { generateRefreshToken } from '../utils/generateRefreshToken.js'
 import User from '../models/user.model.js'
-import RefreshToken from '../models/refreshToken.model.js'
+import Token from '../models/token.model.js'
+import { verifyTokenValidity } from '../utils/verifyTokenValidity.js'
 
 export class AuthController {
   static async signup (req, res) {
-    // eslint-disable-next-line camelcase
     const { username, name, email, password, phone_number, profilePic, addresses } = req.body
-
     try {
-      // eslint-disable-next-line camelcase
       await User.create({ username, name, email, password, phone_number, profilePic, addresses })
       return res.status(201).json({ message: 'User created' })
     } catch (error) {
@@ -22,71 +19,56 @@ export class AuthController {
   }
 
   static async login (req, res) {
-    // Invalidate a remaining "refreshTokenID" in cookies
-    const { refreshTokenID } = req.cookies
-    if (refreshTokenID) {
-      const refreshObj = await RefreshToken.findById(refreshTokenID)
-      refreshObj.is_used = true
-      await refreshObj.save()
-    }
     const { email, password } = req.body
-    try {
-      const user = await User.findOne({ email })
-      if (!user) return res.status(404).json({ message: 'User not found' })
-      if (user.password !== password.trim().toLowerCase()) {
-        return res.status(401).json({ message: 'Invalid credentials' })
-      }
-      const accessToken = generateAccessToken(user._id, user.role)
-      const refreshToken = generateRefreshToken(user._id, user.role)
-      try {
-        const dbToken = await RefreshToken.create({
-          token: encrypt(refreshToken),
-          userID: user._id,
-          role: user.role,
-          expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7)
-        })
-        res.cookie('refreshTokenID', dbToken._id, httpOnly)
-        return res.json({ accessToken })
-      } catch (error) {
-        res.status(500).json({ error })
-      }
-    } catch (error) {
-      return res.status(500).json({ message: 'Internal server error', error })
+    const user = await User.findOne({ email })
+      .catch(e => res.status(500).json({ message: 'Query failed', error: e }))
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' })
+    } else if (user.password !== password) {
+      return res.status(401).json({ message: 'Invalid credentials' })
     }
+    await Token.find({ id_user: user._id })
+      .updateMany({ is_used: true })
+      .catch(e => res.status(500).json({ message: 'Something went wrong updating Token entity', error: e }))
+
+    await Token.create({
+      id_user: user._id,
+      accessToken: encrypt(generateAccessToken(user._id, user.role)),
+      refreshToken: encrypt(generateRefreshToken(user._id, user.role)),
+      role: user.role,
+      is_used: false,
+      expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7)
+    })
+      .then(token => res.status(200).json({ ctks_id: token._id }))
+      .catch(e => res.status(500).json({ message: 'Token entity could not be created ', error: e }))
   }
 
   static async refreshToken (req, res) {
-    const { refreshTokenID } = req.cookies
-    if (!refreshTokenID) return res.sendStatus(401)
+    const { ctks_id } = req.body
+    if (!ctks_id) return res.sendStatus(401)
 
-    try {
-      const refreshObj = await RefreshToken.findById(refreshTokenID)
-      if (refreshObj.is_used) return res.status(403).send('Invalid refresh token')
+    const { is_used, refreshToken, id_user } = await Token.findById(ctks_id)
+    const isTokenValid = await verifyTokenValidity(decrypt(refreshToken), config.get('refresh_tk.secret'))
 
-      jwt.verify(decrypt(refreshObj.token), config.get('refresh_tk.secret'), async (err, user) => {
-        if (err) return res.status(403).json({ message: 'Invalid refresh token' })
-        const accessToken = generateAccessToken(user.userID, user.role)
-        const refreshToken = generateRefreshToken(user.userID, user.role)
-        // change token status to used
-        refreshObj.is_used = true
-        await refreshObj.save()
+    if (is_used || isTokenValid === false) return res.status(403).send('Invalid refresh token')
 
-        try {
-          const dbToken = await RefreshToken.create({
-            token: encrypt(refreshToken),
-            userID: user.userID,
-            role: user.role,
-            is_used: false,
-            expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7)
-          })
-          res.cookie('refreshTokenID', dbToken._id, httpOnly)
-          return res.json({ accessToken })
-        } catch (error) {
-          res.status(500).json({ error })
-        }
-      })
-    } catch (error) {
-      return res.status(500).json({ error })
-    }
+    await Token.findById(ctks_id)
+      .updateOne({ is_used: true })
+      .catch(e => res.status(500).json({ message: 'Something went wrong updating Token entity', error: e }))
+
+    const user = await User.findById(id_user)
+      .catch(e => res.status(500).json({ message: 'Query failed', error: e }))
+
+    await Token.create({
+      id_user,
+      accessToken: encrypt(generateAccessToken(user._id, user.role)),
+      refreshToken: encrypt(generateRefreshToken(user._id, user.role)),
+      role: user.role,
+      is_used: false,
+      expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7)
+    })
+      .then(token => res.status(200).json({ ctks_id: token._id }))
+      .catch(e => res.status(500).json({ message: 'Token entity could not be created', error: e }))
   }
 }

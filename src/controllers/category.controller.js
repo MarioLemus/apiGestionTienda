@@ -4,7 +4,7 @@ export class CategoryController {
   async get (req, res) {
     try {
       const category = await Category.find()
-      res.status(200).json(category)
+      return res.status(200).json(category)
     } catch (error) {
       return res.status(400).json({ error: 'Error al obtener las categorias' })
     }
@@ -25,7 +25,7 @@ export class CategoryController {
       })
 
       category.save()
-      res.status(200).json(category)
+      return res.status(200).json(category)
     } catch (error) {
       return res.status(400).json({ error: 'Error al guardar la categoria' })
     }
@@ -43,7 +43,7 @@ export class CategoryController {
       cat.name = name
       cat.update_date = new Date()
       await cat.save()
-      res.status(200).json('Categoria actualizada')
+      return res.status(200).json('Categoria actualizada')
     } catch (error) {
       return res.status(400).json({ error: 'Error al guardar la categoria' })
     }
@@ -56,18 +56,18 @@ export class CategoryController {
     if (!category) {
       return res.status(400).json({ error: 'No existe la categoria' })
     }
-    res.status(200).json('Categoria eliminada con exito ')
+    return res.status(200).json('Categoria eliminada con exito ')
   }
 
-  async getbyame (req, res) {
-    const { name } = req.params.name
-    const category = Category.findOne({ name })
+  async getbyname (req, res) {
+    const { name } = req.params
+    const category = await Category.findOne({ name })
     if (!category) {
       return res
         .status(400)
         .json({ error: `No se econtró la categoria ${name}` })
     }
 
-    res.status(200).json(category)
+    return res.status(200).json(category)
   }
 }

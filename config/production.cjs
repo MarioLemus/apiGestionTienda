@@ -22,6 +22,9 @@ module.exports = {
   crypto: {
     secret: process.env.CRYPTO_SEC
   },
+  cookie: {
+    secure: true
+  },
   logger: process.env.LOGGER_OPTION
 }
   

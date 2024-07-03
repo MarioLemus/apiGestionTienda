@@ -22,5 +22,8 @@ module.exports = {
   crypto: {
     secret: 'mitienda_901234567890123_ejemplo'
   },
+  cookie: {
+    secure: false
+  },
   logger: 'dev'
 }

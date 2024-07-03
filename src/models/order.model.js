@@ -1,6 +1,5 @@
 import mongoose from 'mongoose'
 
-// ! envios disponibles solo dentro del mismo municipio/distrito
 const OrderSchema = new mongoose.Schema({
   id_customer: {
     type: mongoose.Schema.Types.ObjectId,
@@ -9,12 +8,6 @@ const OrderSchema = new mongoose.Schema({
     trim: true
   },
   customer_name: {
-    type: String,
-    required: true,
-    minLength: 3,
-    trim: true
-  },
-  id_order: {
     type: String,
     required: true,
     minLength: 3,

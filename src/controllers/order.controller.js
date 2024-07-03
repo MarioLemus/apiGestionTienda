@@ -66,9 +66,9 @@ export class OrderController {
       })
 
       await newOrder.save()
-      res.status(201).json(newOrder)
+      return res.status(201).json(newOrder)
     } catch (err) {
-      res.status(500).json({ error: err.message })
+      return res.status(500).json({ error: err.message })
     }
   }
 
@@ -96,9 +96,9 @@ export class OrderController {
       await Promise.all(updates)
 
       await order.save()
-      res.status(201).json(order)
+      return res.status(201).json(order)
     } catch (err) {
-      res.status(500).json({ error: err.message })
+      return res.status(500).json({ error: err.message })
     }
   }
 }

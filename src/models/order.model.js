@@ -13,9 +13,6 @@ const OrderSchema = new mongoose.Schema({
     minLength: 3,
     trim: true
   },
-    minLength:  3,
-    trim: true
-  },
   payment_method: {
     type: String,
     enum: ['efectivo', 'tarjeta'],

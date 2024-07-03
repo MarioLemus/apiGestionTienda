@@ -3,13 +3,13 @@ import mongoose from 'mongoose'
 const ProductSchema = new mongoose.Schema({
   createdby: {
     type: mongoose.Schema.Types.ObjectId,
-    required: false,
+    required: true,
     minLength: 3,
     trim: true
   },
   updatedby: {
     type: mongoose.Schema.Types.ObjectId,
-    required: false,
+    required: true,
     minLength: 3,
     trim: true,
     default: null
@@ -22,7 +22,8 @@ const ProductSchema = new mongoose.Schema({
   },
   description: {
     type: String,
-    trim: true
+    trim: true,
+    default: ''
   },
   price: {
     type: Number,
@@ -32,17 +33,18 @@ const ProductSchema = new mongoose.Schema({
   categoryid: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Category',
-    required: false
+    required: true
   },
   stock: {
     type: Number,
     required: true,
-    min: 0,
+    min: 1,
     default: 0
   },
   image: {
     type: String,
-    required: true
+    required: true,
+    default: null
   },
   update_date: {
     type: Date,
